@@ -1,4 +1,3 @@
-.golangci.yml
 resizego
 run_server.sh
 images
