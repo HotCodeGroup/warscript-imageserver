@@ -1,9 +1,11 @@
-package main
+package controllers
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Error by APIdoc
@@ -20,6 +22,7 @@ func SendError(w http.ResponseWriter, msg string, status int) {
 
 // SendResponse sends response
 func SendResponse(w http.ResponseWriter, v interface{}, status int) {
+	log.Printf("status: %d, response: %v", status, v)
 	w.Header().Set("Content-Type", "application/json")
 	resp, err := json.Marshal(v)
 	if err != nil {
@@ -28,6 +31,5 @@ func SendResponse(w http.ResponseWriter, v interface{}, status int) {
 		return
 	}
 	w.WriteHeader(status)
-	fmt.Println(resp)
 	w.Write(resp)
 }
