@@ -134,17 +134,18 @@ func getFile(w http.ResponseWriter, filename string) {
 	}
 	FileSize := strconv.FormatInt(FileStat.Size(), 10)
 
-	log.Printf("sending %s", filename)
-	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
-	w.Header().Set("Content-Type", FileContentType)
-	w.Header().Set("Content-Length", FileSize)
-
 	_, err = Openfile.Seek(0, 0)
 	if err != nil {
 		log.Printf("failed to send %s", filename)
 		SendError(w, "can't read file", http.StatusInternalServerError)
 		return
 	}
+
+	log.Printf("sending %s", filename)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Type", FileContentType)
+	w.Header().Set("Content-Length", FileSize)
+
 	_, err = io.Copy(w, Openfile)
 	if err != nil {
 		log.Printf("failed to send %s", filename)
