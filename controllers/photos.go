@@ -24,6 +24,13 @@ const (
 	dirpath      = "images"
 )
 
+var validImageTypes = map[string]interface{}{
+	"image/jpeg": struct{}{},
+	"image/jpg":  struct{}{},
+	"image/gif":  struct{}{},
+	"image/png":  struct{}{},
+}
+
 // StorageInit inits file storage
 func StorageInit() error {
 	if _, err := os.Stat(dirpath); os.IsNotExist(err) {
@@ -50,12 +57,10 @@ func checkImageType(file io.ReadSeeker) error {
 	}
 
 	filetype := http.DetectContentType(buff)
-	switch filetype {
-	case "image/jpeg", "image/jpg", "image/gif", "image/png":
-		return nil // cuts "image/"
-	default:
-		return errors.Wrapf(utils.ErrBadType, "%s is not allowed", filetype)
+	if _, ok := validImageTypes[filetype]; ok {
+		return nil
 	}
+	return errors.Wrapf(utils.ErrBadType, "%s is not allowed", filetype)
 }
 
 func saveImage(file io.ReadSeeker) (string, error) {
