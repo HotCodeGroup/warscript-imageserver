@@ -20,13 +20,14 @@ var (
 )
 
 // ResizeImage resizes image by given size
-func ResizeImage(imgName, resizeName, itype string, height, width uint) error {
-	imgJpg, err := openResize(imgName, itype)
+func ResizeImage(imgName, resizeName string, height, width uint) error {
+	img, itype, err := openResize(imgName)
 	if err != nil {
 		return err
 	}
-	imgJpg = resize.Resize(height, width, imgJpg, resize.Bicubic)
-	err = saveResize(resizeName, itype, imgJpg)
+
+	img = resize.Resize(height, width, img, resize.Bicubic)
+	err = saveResize(resizeName, itype, img)
 	if err != nil {
 		return err
 	}
@@ -34,34 +35,22 @@ func ResizeImage(imgName, resizeName, itype string, height, width uint) error {
 	return nil
 }
 
-func openResize(imgName, itype string) (image.Image, error) {
+func openResize(imgName string) (image.Image, string, error) {
 	imgIn, err := os.Open(imgName)
-
 	if err != nil {
-		return nil, errors.Wrap(ErrInternal, "can't open origin")
+		return nil, "", errors.Wrap(ErrInternal, "can't open origin")
 	}
 	defer imgIn.Close()
 
-	var imgJpg image.Image
-
-	switch itype {
-	case "gif":
-		imgJpg, err = gif.Decode(imgIn)
-	case "png":
-		imgJpg, err = png.Decode(imgIn)
-	case "jpg", "jpeg":
-		imgJpg, err = jpeg.Decode(imgIn)
-	default:
-		return nil, errors.Wrap(ErrBadType, "can't resize type "+itype)
-	}
-
+	img, itype, err := image.Decode(imgIn)
 	if err != nil {
-		return nil, errors.Wrap(ErrInternal, "can't decode origin")
+		return nil, "", errors.Wrap(ErrInternal, "can't decode origin")
 	}
-	return imgJpg, nil
+
+	return img, itype, nil
 }
 
-func saveResize(resizeName, itype string, imgJpg image.Image) error {
+func saveResize(resizeName, itype string, img image.Image) error {
 	imgOut, err := os.Create(resizeName)
 	if err != nil {
 		return errors.Wrap(ErrInternal, "can't create image for resize")
@@ -70,11 +59,11 @@ func saveResize(resizeName, itype string, imgJpg image.Image) error {
 
 	switch itype {
 	case "gif":
-		err = gif.Encode(imgOut, imgJpg, nil)
+		err = gif.Encode(imgOut, img, nil)
 	case "png":
-		err = png.Encode(imgOut, imgJpg)
+		err = png.Encode(imgOut, img)
 	case "jpg", "jpeg":
-		err = jpeg.Encode(imgOut, imgJpg, nil)
+		err = jpeg.Encode(imgOut, img, nil)
 	default:
 		return errors.Wrap(ErrBadType, "can't resize type "+itype)
 	}
