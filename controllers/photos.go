@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/HotCodeGroup/warscript-imageserver/utils"
+
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -71,8 +72,10 @@ func saveImage(file io.ReadSeeker) (string, error) {
 
 	ident := uuid.NewV4()
 	filesetid := ident.String()
-	originName := fmt.Sprintf("./%s/%s.%s", dirpath, filesetid, originSuf)     // "./" + dirpath + "/" + filesetid + "." + originSuf + "." + itype
-	avasizeName := fmt.Sprintf("./%s/%s.%s", dirpath, filesetid, square300Suf) // "./" + dirpath + "/" + filesetid + "." + square300Suf + "." + itype
+	// "./" + dirpath + "/" + filesetid + "." + originSuf + "." + itype
+	originName := fmt.Sprintf("./%s/%s.%s", dirpath, filesetid, originSuf)
+	// "./" + dirpath + "/" + filesetid + "." + square300Suf + "." + itype
+	avasizeName := fmt.Sprintf("./%s/%s.%s", dirpath, filesetid, square300Suf)
 	f, err := os.Create(originName)
 	if err != nil {
 		return "", errors.Wrap(utils.ErrInternal, "can't create origin")
