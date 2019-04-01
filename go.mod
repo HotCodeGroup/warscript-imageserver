@@ -1,6 +1,6 @@
 module github.com/HotCodeGroup/warscript-imageserver
 
-go 1.12
+go 1.12.1
 
 require (
 	github.com/gorilla/handlers v1.4.0
