@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/HotCodeGroup/warscript-imageserver/utils"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -25,7 +26,7 @@ type FileInfo struct {
 }
 
 // StorageInit inits file storage
-func Init(awsAccess, awsSecret, awsToken, bucketName string) (*Storage, error) {
+func NewStorage(awsAccess, awsSecret, awsToken, bucketName string) (*Storage, error) {
 	creds := credentials.NewStaticCredentials(awsAccess, awsSecret, awsToken)
 	_, err := creds.Get()
 	if err != nil {
@@ -43,6 +44,7 @@ func Init(awsAccess, awsSecret, awsToken, bucketName string) (*Storage, error) {
 	return storage, nil
 }
 
+// SaveImage загрузка файла на Amazon S3 storage
 func (s *Storage) SaveImage(file io.ReadSeeker, size int64) (string, error) {
 	fileType, err := utils.GetImageType(file)
 	if err != nil {
@@ -71,6 +73,7 @@ func (s *Storage) SaveImage(file io.ReadSeeker, size int64) (string, error) {
 	return fileUUID, nil
 }
 
+// GetFile загрузка файла из Amazon s3 storage
 func (s *Storage) GetFile(fileUUID string) (io.ReadCloser, *FileInfo, error) {
 	resp, err := s.SVC.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(s.BucketName),

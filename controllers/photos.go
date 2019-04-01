@@ -16,17 +16,13 @@ type createResp struct {
 	PhotoUUID string `json:"photo_uuid"`
 }
 
-const (
-	originSuf    = "origin"
-	square300Suf = "300x300"
-)
-
 type Controller struct {
 	store *storage.Storage
 }
 
-func Init(awsAccess, awsSecret, awsToken, bucketName string) (*Controller, error) {
-	st, err := storage.Init(awsAccess, awsSecret, awsToken, bucketName)
+// NewController возвращает новый контроллер, готовый к обработке файлов
+func NewController(awsAccess, awsSecret, awsToken, bucketName string) (*Controller, error) {
+	st, err := storage.NewStorage(awsAccess, awsSecret, awsToken, bucketName)
 	if err != nil {
 		return nil, errors.Wrap(err, "can not open storage")
 	}
@@ -70,20 +66,6 @@ func (c *Controller) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 // GetPhoto handler for getting photo from server
 func (c *Controller) GetPhoto(w http.ResponseWriter, r *http.Request) {
 	photoUUID := mux.Vars(r)["photo_uuid"]
-	var format string
-	keys, ok := r.URL.Query()["format"]
-
-	if !ok || len(keys[0]) < 1 {
-		format = originSuf
-	} else {
-		format = keys[0]
-	}
-
-	if format != originSuf && format != square300Suf {
-		SendError(w, "bad format "+format, http.StatusBadRequest)
-		return
-	}
-
 	fileBody, fileInfo, err := c.store.GetFile(photoUUID)
 	if err != nil {
 		SendError(w, err.Error(), http.StatusInternalServerError)

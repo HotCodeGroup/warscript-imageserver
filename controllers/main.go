@@ -1,6 +1,11 @@
 package controllers
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
+)
 
 var uploadFormTmpl = []byte(`
 <html>
@@ -14,5 +19,7 @@ var uploadFormTmpl = []byte(`
 `)
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
-	w.Write(uploadFormTmpl)
+	if _, err := w.Write(uploadFormTmpl); err != nil {
+		log.Error(errors.Wrap(err, "unable to send upload form"))
+	}
 }

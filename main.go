@@ -18,7 +18,7 @@ func init() {
 }
 
 func main() {
-	control, err := controllers.Init(os.Getenv("AWS_ACCESS_KEY_ID"),
+	control, err := controllers.NewController(os.Getenv("AWS_ACCESS_KEY_ID"),
 		os.Getenv("AWS_SECRET_ACCESS_KEY"), "", "images.warscript")
 	if err != nil {
 		log.Errorf("cant start main server: storage can't be loaded: err: %s", err.Error())
