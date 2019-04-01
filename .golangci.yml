@@ -15,7 +15,7 @@ linters-settings:
   lll:
     line-length: 120
   goimports:
-    local-prefixes: github.com/go-park-mail-ru/2019_1_HotCode
+    local-prefixes: github.com/HotCodeGroup/warscript-imageserver
   gocritic:
     enabled-tags:
       - performance
@@ -29,6 +29,3 @@ linters:
     - prealloc
     - gochecknoglobals
     - gochecknoinits
-run:
-  skip-files:
-    - depricated.go

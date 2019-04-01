@@ -17,6 +17,11 @@ func init() {
 }
 
 func main() {
+	err := controllers.StorageInit()
+	if err != nil {
+		log.Errorf("cant start main server: storage can't be loaded: err: %s", err.Error())
+		return
+	}
 
 	r := mux.NewRouter()
 	r.HandleFunc("/photos", controllers.UploadPhoto).Methods("POST")
@@ -31,9 +36,9 @@ func main() {
 
 	port := os.Getenv("PORT")
 	log.Infof("MainService successfully started at port %s", port)
-	err := http.ListenAndServe(":"+port, corsMiddleware(r))
+	err = http.ListenAndServe(":"+port, corsMiddleware(r))
 	if err != nil {
-		log.Errorf("cant start main server. err: %s", err.Error())
+		log.Errorf("cant start main server: err: %s", err.Error())
 		return
 	}
 }
