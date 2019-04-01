@@ -3,7 +3,7 @@
 [![Travis](https://travis-ci.org/HotCodeGroup/warscript-imageserver.svg?branch=master)](https://travis-ci.org/HotCodeGroup/warscript-imageserver)
 [![rcard](https://goreportcard.com/badge/github.com/HotCodeGroup/warscript-imageserver)](https://goreportcard.com/report/github.com//HotCodeGroup/warscript-imageserver)
 
-Прослойка инкапсулирующая процесс сохранения/загрузки картинок для проекта [[Warsciprt]](https://warscript.now.sh/dist/).
+Прослойка инкапсулирующая процесс сохранения/загрузки картинок для проекта [[WarSciprt]](https://warscript.now.sh/dist/).
 
 ## Документация
 
