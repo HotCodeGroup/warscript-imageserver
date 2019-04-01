@@ -3,3 +3,5 @@ run_server.sh
 images
 Godeps
 vendor
+warscript-imageserver
+run_end.sh

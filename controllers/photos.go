@@ -58,10 +58,8 @@ func saveImage(file io.ReadSeeker) (string, error) {
 			return "", errors.Wrap(utils.ErrInternal, "failed to create directoty")
 		}
 	}
-	ident, err := uuid.NewV4()
-	if err != nil {
-		return "", errors.Wrap(utils.ErrInternal, "failed to create uuid")
-	}
+
+	ident := uuid.NewV4()
 	filesetid := ident.String()
 	originName := "./" + dirpath + "/" + filesetid + "." + originSuf + "." + itype
 	avasizeName := "./" + dirpath + "/" + filesetid + "." + square300Suf + "." + itype
