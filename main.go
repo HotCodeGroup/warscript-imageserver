@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/HotCodeGroup/warscript-imageserver/controllers"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
@@ -17,15 +18,16 @@ func init() {
 }
 
 func main() {
-	err := controllers.StorageInit()
+	control, err := controllers.Init(os.Getenv("AWS_ACCESS_KEY_ID"),
+		os.Getenv("AWS_SECRET_ACCESS_KEY"), "", "images.warscript")
 	if err != nil {
 		log.Errorf("cant start main server: storage can't be loaded: err: %s", err.Error())
 		return
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/photos", controllers.UploadPhoto).Methods("POST")
-	r.HandleFunc("/photos/{photo_uuid}", controllers.GetPhoto).Methods("GET")
+	r.HandleFunc("/photos", control.UploadPhoto).Methods("POST")
+	r.HandleFunc("/photos/{photo_uuid}", control.GetPhoto).Methods("GET")
 	r.HandleFunc("/", controllers.MainPage).Methods("GET")
 	corsMiddleware := handlers.CORS(
 		handlers.AllowedOrigins([]string{os.Getenv("CORS_HOST")}),
