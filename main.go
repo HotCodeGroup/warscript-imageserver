@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/HotCodeGroup/warscript-imageserver/controllers"
 
@@ -30,7 +31,7 @@ func main() {
 	r.HandleFunc("/photos/{photo_uuid}", control.GetPhoto).Methods("GET")
 	r.HandleFunc("/", controllers.MainPage).Methods("GET")
 	corsMiddleware := handlers.CORS(
-		handlers.AllowedOrigins([]string{os.Getenv("CORS_HOST")}),
+		handlers.AllowedOrigins(strings.Split(os.Getenv("CORS_HOSTS"), ";")),
 		handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE"}),
 		handlers.AllowedHeaders([]string{"Content-Type"}),
 		handlers.AllowCredentials(),
